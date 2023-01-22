@@ -1,4 +1,4 @@
-name: CI
+name: build_release
 # Workflow file for windows
 on:
   push:
@@ -48,5 +48,22 @@ jobs:
     - name: Upload production-ready build files
       uses: actions/upload-artifact@v3
       with:
-        name: production
-        path: ./build
+        name: Nightly-Debug-Build
+        path: ./build/Debug
+
+    # Make new release with the artifact
+    - name: version
+      run: echo "::set-output name=version::$(./bin/azblogfilter --version)"
+      id: version
+
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: false
+        release_name: Nightly
+        tag_name: ${{ github.ref }}
+        body_path: CHANGELOG.md
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
