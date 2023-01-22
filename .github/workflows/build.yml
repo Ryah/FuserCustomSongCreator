@@ -25,6 +25,9 @@ jobs:
         gcc: true
         cmake: true
 
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
     - name: Running cmake (windows)
       run: |
         cd ${{ github.workspace }}
