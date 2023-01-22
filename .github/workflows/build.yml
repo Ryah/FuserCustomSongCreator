@@ -44,6 +44,14 @@ jobs:
         cd build
         MSBuild.exe Fuser_CustomSongCreator.sln
 
+    # Zip Debug folder for nightly release
+    - name: Easy Zip Files
+      uses: vimtor/action-zip@v1.1
+      with:
+        files: debug/
+        dest: release.zip
+
+
     # Upload Artifact
     - name: Upload production-ready build files
       uses: actions/upload-artifact@v3
@@ -51,14 +59,12 @@ jobs:
         name: Nightly-Debug-Build
         path: ./build/Debug
 
-    - name: release
-      uses: actions/create-release@v1
-      id: create_release
+    # Create release with release.zip
+    - uses: "marvinpinto/action-automatic-releases@latest"
       with:
-        draft: false
-        prerelease: false
-        release_name: Nightly
-        tag_name: ${{ github.ref }}
-        body_path: CHANGELOG.md
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: true
+        title: "Development Build"
+        files: |
+          release.zip
