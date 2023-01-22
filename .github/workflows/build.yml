@@ -17,6 +17,15 @@ jobs:
       with:
           submodules: recursive
 
+    - name: Setup Cpp (C++ / C)
+      uses: aminya/setup-cpp@v0.26.2
+      with:
+        compiler: ${{ matrix.compiler }}
+        vcvarsall: ${{ contains(matrix.os, 'windows' )}}
+        gcc: true
+        cmake: true
+        vcpkg: true
+
     - name: Installing vcpkg (windows)
       run: |
         cd ..
