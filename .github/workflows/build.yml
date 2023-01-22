@@ -17,6 +17,7 @@ jobs:
       with:
           submodules: recursive
 
+    #Use setup-cpp to setup C++ environment (CMake and GCC, adds both to PATH)
     - name: Setup Cpp (C++ / C)
       uses: aminya/setup-cpp@v0.26.2
       with:
@@ -24,10 +25,12 @@ jobs:
         vcvarsall: ${{ contains(matrix.os, 'windows' )}}
         gcc: true
         cmake: true
-
+        
+    # Add MSBuild to PATH since setup-cpp doesn't do that for dome reason
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
 
+    # Configure CMake
     - name: Running cmake (windows)
       run: |
         cd ${{ github.workspace }}
@@ -35,7 +38,15 @@ jobs:
         cd build
         cmake ../ -DCMAKE_GENERATOR_PLATFORM=Win32
 
+    # Build sln file
     - name: Build Solution (windows)
       run: |
         cd build
         MSBuild.exe Fuser_CustomSongCreator.sln
+
+    # Upload Artifact
+    - name: Upload production-ready build files
+      uses: actions/upload-artifact@v3
+      with:
+        name: production
+        path: ./build
