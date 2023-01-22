@@ -38,4 +38,4 @@ jobs:
     - name: Build Solution (windows)
       run: |
         cd build
-        MSBuild.exe CMakeHelloWorld.sln
+        MSBuild.exe Fuser_CustomSongCreator.sln
